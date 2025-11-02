@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملحقة الديوان الوطني لمحو الأمية وتعليم الكبار - ولاية الجزائر</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            direction: rtl;
+            overflow-x: hidden;
+        }
+        
+        .floating-icon {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .page-transition {
+            transition: all 0.5s ease-in-out;
+        }
+        
+        .card-3d {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: transform 0.5s ease;
+        }
+        
+        .card-3d:hover {
+            transform: rotateY(5deg) rotateX(5deg) translateY(-10px);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .form-input {
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-hidden {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .game-card {
+            transition: all 0.3s ease;
+        }
+        
+        .game-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .map-container {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-right: 2rem;
+        }
+        
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
+        }
+        
+        .timeline-item:after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+        }
+        
+        .partner-logo {
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+        
+        .partner-logo:hover {
+            filter: grayscale(0%);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white mr-3">
+                    <i class="fas fa-book-open text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold">ملحقة الديوان الوطني لمحو الأمية</h1>
+                    <p class="text-sm text-gray-600">ولاية الجزائر</p>
+                </div>
+            </div>
+            
+            <button id="menu-toggle" class="md:hidden text-blue-600 text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav class="hidden md:flex space-x-6">
+                <a href="#history" class="nav-link hover:text-blue-600 transition-colors">نبذة تاريخية</a>
+                <a href="#services" class="nav-link hover:text-blue-600 transition-colors">المصالح</a>
+                <a href="#registration" class="nav-link hover:text-blue-600 transition-colors">التسجيلات</a>
+                <a href="#resources" class="nav-link hover:text-blue-600 transition-colors">الموارد</a>
+                <a href="#contact" class="nav-link hover:text-blue-600 transition-colors">اتصل بنا</a>
+                <button id="login-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-user mr-2"></i>تسجيل الدخول
+                </button>
+            </nav>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white py-4 px-4 shadow-lg">
+            <div class="flex flex-col space-y-4">
+                <a href="#history" class="nav-link hover:text-blue-600 transition-colors">نبذة تاريخية</a>
+                <a href="#services" class="nav-link hover:text-blue-600 transition-colors">المصالح</a>
+                <a href="#registration" class="nav-link hover:text-blue-600 transition-colors">التسجيلات</a>
+                <a href="#resources" class="nav-link hover:text-blue-600 transition-colors">الموارد</a>
+                <a href="#contact" class="nav-link hover:text-blue-600 transition-colors">اتصل بنا</a>
+                <button id="mobile-login-btn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-center">
+                    <i class="fas fa-user mr-2"></i>تسجيل الدخول
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-16 md:py-24 bg-gradient-to-l from-blue-600 to-indigo-700 text-white">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">ملحقة الديوان الوطني لمحو الأمية وتعليم الكبار</h1>
+                <p class="text-xl mb-8">منصة متكاملة لدعم جهود محو الأمية وتعليم الكبار في ولاية الجزائر</p>
+                <div class="flex flex-wrap gap-4">
+                    <button class="bg-white text-blue-600 px-6 py-3 rounded-lg font-bold hover:bg-blue-50 transition-colors">
+                        <i class="fas fa-user-plus mr-2"></i>انشاء حساب
+                    </button>
+                    <button class="border-2 border-white text-white px-6 py-3 rounded-lg font-bold hover:bg-white hover:text-blue-600 transition-colors">
+                        <i class="fas fa-info-circle mr-2"></i>المزيد من المعلومات
+                    </button>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative w-64 h-64 md:w-80 md:h-80">
+                    <div class="absolute top-0 left-0 w-full h-full bg-blue-500 rounded-full opacity-20 floating-icon"></div>
+                    <div class="absolute top-10 right-10 w-3/4 h-3/4 bg-indigo-400 rounded-full opacity-30 floating-icon" style="animation-delay: 1s;"></div>
+                    <div class="absolute bottom-10 left-10 w-1/2 h-1/2 bg-white rounded-full opacity-20 floating-icon" style="animation-delay: 2s;"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-6xl md:text-8xl text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Historical Overview Section -->
+    <section id="history" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">نبذة تاريخية</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <div class="bg-blue-50 rounded-xl p-6 card-3d">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-700">الديوان الوطني لمحو الأمية وتعليم الكبار</h3>
+                    <p class="text-gray-700 mb-4">
+                        تأسس الديوان الوطني لمحو الأمية وتعليم الكبار في إطار الجهود الوطنية لمكافحة الأمية في الجزائر. 
+                        يهدف الديوان إلى تنظيم وتنسيق جهود محو الأمية على المستوى الوطني، وتطوير برامج تعليمية تلبي احتياجات الكبار.
+                    </p>
+                    <p class="text-gray-700">
+                        يعمل الديوان على إعداد المناهج والمواد التعليمية، وتأهيل المدرسين، وتوفير الدعم اللازم للملحقات الولائية لضمان نجاح برامج محو الأمية.
+                    </p>
+                </div>
+                
+                <div class="bg-green-50 rounded-xl p-6 card-3d">
+                    <h3 class="text-2xl font-bold mb-4 text-green-700">تاريخ ملحقة ولاية الجزائر</h3>
+                    <p class="text-gray-700 mb-4">
+                        تأسست ملحقة ولاية الجزائر في إطار توسع شبكة ملحقات الديوان الوطني لمحو الأمية عبر مختلف ولايات الوطن. 
+                        تهدف الملحقة إلى تنفيذ استراتيجيات وبرامج محو الأمية على مستوى ولاية الجزائر.
+                    </p>
+                    <p class="text-gray-700">
+                        تساهم الملحقة في تحقيق أهداف الدولة في مجال محو الأمية من خلال توفير فصول دراسية، وتأهيل معلمين، 
+                        وتنظيم حملات توعوية، وتقديم الدعم للمتعلمين الكبار.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 rounded-xl p-6">
+                <h3 class="text-2xl font-bold mb-6 text-center text-gray-800">مجهودات الدولة الجزائرية في مكافحة الأمية</h3>
+                
+                <div class="timeline-container space-y-8">
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-bold mb-2 text-blue-600">فترة ما بعد الاستقلال</h4>
+                        <p class="text-gray-700">
+                            بعد الاستقلال، أولت الدولة الجزائرية أهمية كبرى لمكافحة الأمية باعتبارها ركيزة أساسية للتنمية. 
+                            تم إطلاق حملات وطنية واسعة لمحو الأمية استهدفت مختلف فئات المجتمع.
+                        </p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-bold mb-2 text-blue-600">التسعينيات</h4>
+                        <p class="text-gray-700">
+                            شهدت هذه الفترة تطوير برامج متخصصة لمحو الأمية، وإنشاء هياكل مؤسساتية للإشراف على جهود محو الأمية، 
+                            بما في ذلك تأسيس الديوان الوطني لمحو الأمية وتعليم الكبار.
+                        </p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-bold mb-2 text-blue-600">الألفية الجديدة</h4>
+                        <p class="text-gray-700">
+                            تم تعزيز جهود محو الأمية من خلال إدماج التكنولوجيات الحديثة، وتطوير مناهج متكاملة، 
+                            وتوسيع شبكة الملحقات الولائية لتغطية مختلف مناطق الوطن.
+                        </p>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h4 class="text-xl font-bold mb-2 text-blue-600">الجهود الحالية</h4>
+                        <p class="text-gray-700">
+                            تواصل الدولة بذل جهود كبيرة لمكافحة الأمية من خلال برامج مستدامة، وشراكات مع منظمات المجتمع المدني، 
+                            واستخدام أساليب تعليمية مبتكرة تلبي احتياجات المتعلمين الكبار.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 bg-gradient-to-r from-blue-50 to-indigo-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">مصالح ملحقة ولاية الجزائر</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-white rounded-xl p-6 card-3d shadow-lg">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4">
+                        <i class="fas fa-broadcast-tower text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">مصلحة الوسائل والإعلام والاتصال</h3>
+                    <p class="text-gray-600 mb-4">
+                        تهتم هذه المصلحة بتوفير الوسائل التعليمية والإعلامية اللازمة لنجاح برامج محو الأمية، 
+                        وتنظيم الحملات التوعوية، واستخدام وسائل الاتصال الحديثة لنشر ثقافة التعلم.
+                    </p>
+                    <button class="text-blue-600 font-semibold flex items-center">
+                        <span>المزيد</span>
+                        <i class="fas fa-arrow-left mr-2"></i>
+                    </button>
+                </div>
+                
+                <!-- Service 2 -->
+                <div class="bg-white rounded-xl p-6 card-3d shadow-lg">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4">
+                        <i class="fas fa-chalkboard-teacher text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">مصلحة التكوين</h3>
+                    <p class="text-gray-600 mb-4">
+                        تهدف هذه المصلحة إلى تأهيل وتكوين المعلمين والمشرفين على برامج محو الأمية، 
+                        وتنظيم دورات تدريبية لتحسين كفاءاتهم، وتطوير قدراتهم في مجال تعليم الكبار.
+                    </p>
+                    <button class="text-green-600 font-semibold flex items-center">
+                        <span>المزيد</span>
+                        <i class="fas fa-arrow-left mr-2"></i>
+                    </button>
+                </div>
+                
+                <!-- Service 3 -->
+                <div class="bg-white rounded-xl p-6 card-3d shadow-lg">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mb-4">
+                        <i class="fas fa-calculator text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">مصلحة المحاسبة</h3>
+                    <p class="text-gray-600 mb-4">
+                        تتولى هذه المصلحة إدارة الشؤون المالية للملحقة، ومتابعة الميزانيات، 
+                        وتنظيم العمليات المحاسبية، وضمان الشفافية في صرف الاعتمادات المالية.
+                    </p>
+                    <button class="text-purple-600 font-semibold flex items-center">
+                        <span>المزيد</span>
+                        <i class="fas fa-arrow-left mr-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section id="registration" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">التسجيلات الخاصة بالأعوان المتعاقدين</h2>
+            
+            <div class="max-w-2xl mx-auto bg-blue-50 rounded-xl p-6 shadow-lg">
+                <h3 class="text-2xl font-bold mb-6 text-blue-700 text-center">استمارة التسجيل</h3>
+                
+                <form class="space-y-4" id="registration-form">
+                    <div>
+                        <label class="block text-gray-700 mb-2">الاسم واللقب</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">تاريخ ومكان التدريس</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">رقم الهاتف</label>
+                        <input type="tel" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">البريد الإلكتروني</label>
+                        <input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">المؤهلات العلمية</label>
+                        <textarea rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:border-blue-500"></textarea>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="agree-terms" class="ml-2" required>
+                        <label for="agree-terms" class="text-gray-700">أوافق على الشروط والأحكام</label>
+                    </div>
+                    
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors w-full">
+                        <i class="fas fa-paper-plane mr-2"></i>إرسال الطلب
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources" class="py-16 bg-gradient-to-r from-blue-50 to-indigo-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">مناهج ودليل المعلم وكتب التدريس</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Resource 1 -->
+                <div class="bg-white rounded-xl p-6 card-3d shadow-lg">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-600 mb-4">
+                        <i class="fas fa-book text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">منهج محو الأمية - المستوى الأول</h3>
+                    <p class="text-gray-600 mb-4">المنهج الأساسي لمحو الأمية للمبتدئين</p>
+                    <button class="bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-colors w-full">
+                        <i class="fas fa-download mr-2"></i>تحميل PDF
+                    </button>
+                </div>
+                
+                <!-- Resource 2 -->
+                <div class="bg-white rounded-xl p-6 card-3d shadow-lg">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4">
+                        <i class="fas fa-book-open text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">منهج محو الأمية - المستوى الثاني</h3>
+                    <p class="text-gray-600 mb-4">المنهج المتوسط لمحو الأمية</p>
+                    <button class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition-colors w-full">
+                        <i class="fas fa-download mr-2"></i>تحميل PDF
+                    </button>
+                </div>
+                
+                <!-- Resource 3 -->
+                <div class="bg-white rounded-xl p-6 card-3d shadow-lg">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4">
+                        <i class="fas fa-user-graduate text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">دليل المعلم</h3>
+                    <p class="text-gray-600 mb-4">دليل إرشادي للمعلمين في مجال محو الأمية</p>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition-colors w-full">
+                        <i class="fas fa-download mr-2"></i>تحميل PDF
+                    </button>
+                </div>
+                
+                <!-- Resource 4 -->
+                <div class="bg-white rounded-xl p-6 card-3d shadow-lg">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mb-4">
+                        <i class="fas fa-book text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">كتاب التمارين - المستوى الأول</h3>
+                    <p class="text-gray-600 mb-4">تمارين تطبيقية للمستوى الأول</p>
+                    <button class="bg-purple-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-purple-700 transition-colors w-full">
+                        <i class="fas fa-download mr-2"></i>تحميل PDF
+                    </button>
+                </div>
+                
+                <!-- Resource 5 -->
+                <div class="bg-white rounded-xl p-6 card-3d shadow-lg">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 mb-4">
+                        <i class="fas fa-book-open text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">كتاب التمارين - المستوى الثاني</h3>
+                    <p class="text-gray-600 mb-4">تمارين تطبيقية للمستوى الثاني</p>
+                    <button class="bg-yellow-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-yellow-700 transition-colors w-full">
+                        <i class="fas fa-download mr-2"></i>تحميل PDF
+                    </button>
+                </div>
+                
+                <!-- Resource 6 -->
+                <div class="bg-white rounded-xl p-6 card-3d shadow-lg">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4">
+                        <i class="fas fa-chalkboard text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">الأنشطة الصفية</h3>
+                    <p class="text-gray-600 mb-4">مجموعة من الأنشطة الصفية التفاعلية</p>
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-indigo-700 transition-colors w-full">
+                        <i class="fas fa-download mr-2"></i>تحميل PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">الشركاء</h2>
+            
+            <div class="bg-gray-50 rounded-xl p-6">
+                <p class="text-center text-gray-700 mb-8 text-lg">
+                    نتعاون مع مجموعة من الشركاء الرسميين وغير الرسميين الذين يساهمون في إنجاح مهمة محو الأمية
+                </p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="flex justify-center">
+                        <div class="w-32 h-32 bg-white rounded-lg shadow-md flex items-center justify-center partner-logo">
+                            <i class="fas fa-university text-4xl text-blue-600"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <div class="w-32 h-32 bg-white rounded-lg shadow-md flex items-center justify-center partner-logo">
+                            <i class="fas fa-hand-holding-heart text-4xl text-red-600"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <div class="w-32 h-32 bg-white rounded-lg shadow-md flex items-center justify-center partner-logo">
+                            <i class="fas fa-school text-4xl text-green-600"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <div class="w-32 h-32 bg-white rounded-lg shadow-md flex items-center justify-center partner-logo">
+                            <i class="fas fa-users text-4xl text-purple-600"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <button class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-handshake mr-2"></i>كن شريكاً
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Section -->
+    <section class="py-16 bg-gradient-to-r from-blue-50 to-indigo-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">أقسام الدعم</h2>
+            
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 mb-6 md:mb-0">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-700">تحميل مناهج التدريس والكتب</h3>
+                        <p class="text-gray-700 mb-4">
+                            نقدم من خلال هذا القسم إمكانية تحميل أحدث المناهج والكتب التعليمية الخاصة بمحو الأمية، 
+                            بالتعاون مع الديوان الوطني للتكوين والتعليم عن بعد.
+                        </p>
+                        <p class="text-gray-700 mb-6">
+                            جميع المواد متاحة بصيغة PDF ويمكن الوصول إليها بسهولة من قبل المعلمين والمتعلمين.
+                        </p>
+                        <button class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-download mr-2"></i>الوصول إلى المكتبة
+                        </button>
+                    </div>
+                    
+                    <div class="md:w-1/2 flex justify-center">
+                        <div class="relative w-64 h-64">
+                            <div class="absolute top-0 left-0 w-full h-full bg-blue-500 rounded-full opacity-20 floating-icon"></div>
+                            <div class="absolute top-10 right-10 w-3/4 h-3/4 bg-indigo-400 rounded-full opacity-30 floating-icon" style="animation-delay: 1s;"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-cloud-download-alt text-6xl text-blue-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Future Vision Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">الرؤية المستقبلية</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-blue-50 rounded-xl p-6 card-3d">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-700">الخطط والمشاريع المستقبلية</h3>
+                    <ul class="list-disc pr-5 space-y-2 text-gray-700">
+                        <li>توسيع نطاق برامج محو الأمية ليشمل جميع المناطق النائية</li>
+                        <li>دمج التكنولوجيا الحديثة في عملية التعليم</li>
+                        <li>تطوير مناهج متخصصة تلبي احتياجات فئات عمرية مختلفة</li>
+                        <li>تعزيز الشراكة مع مؤسسات المجتمع المدني</li>
+                        <li>إنشاء مراكز متخصصة لتعليم الكبار</li>
+                        <li>تنظيم مؤتمرات وندوات لتبادل الخبرات</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-green-50 rounded-xl p-6 card-3d">
+                    <h3 class="text-2xl font-bold mb-4 text-green-700">منظور الأعوان</h3>
+                    <p class="text-gray-700 mb-4">
+                        يطمح الأعوان إلى تطوير نظام تعليمي أكثر مرونة وفعالية، مع توفير موارد تعليمية مبتكرة 
+                        وبيئة تعلم محفزة تلبي احتياجات المتعلمين الكبار.
+                    </p>
+                    <p class="text-gray-700">
+                        كما يسعون إلى تعزيز مكانة المعلمين وتحسين ظروف عملهم، وتطوير آليات تقييم أكثر موضوعية 
+                        تعكس التقدم الحقيقي للمتعلمين.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Section -->
+    <section class="py-16 bg-gradient-to-r from-blue-50 to-indigo-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">الذكاء الاصطناعي في مجال محو الأمية</h2>
+            
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 mb-6 md:mb-0">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-700">تطبيقات الذكاء الاصطناعي</h3>
+                        <p class="text-gray-700 mb-4">
+                            نسعى إلى إدماج تقنيات الذكاء الاصطناعي في مجال محو الأمية لتحسين جودة التعليم 
+                            وتقديم تجارب تعلم مخصصة تناسب احتياجات كل متعلم.
+                        </p>
+                        <ul class="list-disc pr-5 space-y-2 text-gray-700 mb-6">
+                            <li>أنظمة تعلم تكيفية تتكيف مع مستوى كل متعلم</li>
+                            <li>تطبيقات للتعرف على الخط اليدوي وتحسين الكتابة</li>
+                            <li>منصات تعليمية ذكية توفر تغذية راجعة فورية</li>
+                            <li>أنظمة تقييم آلية تتبع تقدم المتعلمين</li>
+                        </ul>
+                        <button class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-robot mr-2"></i>اكتشف المزيد
+                        </button>
+                    </div>
+                    
+                    <div class="md:w-1/2 flex justify-center">
+                        <div class="relative w-64 h-64">
+                            <div class="absolute top-0 left-0 w-full h-full bg-blue-500 rounded-full opacity-20 floating-icon"></div>
+                            <div class="absolute top-10 right-10 w-3/4 h-3/4 bg-indigo-400 rounded-full opacity-30 floating-icon" style="animation-delay: 1s;"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-robot text-6xl text-blue-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Educational Games Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">الألعاب التعليمية</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Game 1 -->
+                <div class="bg-blue-50 rounded-xl p-6 game-card shadow-lg">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4">
+                        <i class="fas fa-brain text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">ألعاب تثقيفية</h3>
+                    <p class="text-gray-600 mb-4">ألعاب تعزز المعرفة العامة والثقافة لدى المتعلمين</p>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition-colors w-full">
+                        <i class="fas fa-gamepad mr-2"></i>استكشف الألعاب
+                    </button>
+                </div>
+                
+                <!-- Game 2 -->
+                <div class="bg-green-50 rounded-xl p-6 game-card shadow-lg">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4">
+                        <i class="fas fa-puzzle-piece text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">ألعاب تعليمية</h3>
+                    <p class="text-gray-600 mb-4">ألعاب تفاعلية تعزز مهارات القراءة والكتابة والحساب</p>
+                    <button class="bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition-colors w-full">
+                        <i class="fas fa-gamepad mr-2"></i>استكشف الألعاب
+                    </button>
+                </div>
+                
+                <!-- Game 3 -->
+                <div class="bg-purple-50 rounded-xl p-6 game-card shadow-lg">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mb-4">
+                        <i class="fas fa-volume-up text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">ألعاب صوتية تبادلية</h3>
+                    <p class="text-gray-600 mb-4">ألعاب تفاعلية تعتمد على الصوت لتحسين النطق والاستماع</p>
+                    <button class="bg-purple-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-purple-700 transition-colors w-full">
+                        <i class="fas fa-gamepad mr-2"></i>استكشف الألعاب
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inquiries & Complaints Section -->
+    <section class="py-16 bg-gradient-to-r from-blue-50 to-indigo-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">استفسارات وشكاوى</h2>
+            
+            <div class="max-w-4xl mx-auto bg-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-2xl font-bold mb-6 text-blue-700 text-center">فضاء خاص بالأعوان المتعاقدين</h3>
+                
+                <div class="mb-8">
+                    <p class="text-gray-700 text-center mb-6">
+                        هذا الفضاء مخصص للأعوان المتعاقدين لطرح استفساراتهم وتقديم شكاويهم ومقترحاتهم.
+                    </p>
+                    
+                    <div class="bg-blue-50 rounded-lg p-4 mb-6">
+                        <h4 class="font-bold text-blue-700 mb-2">تعليمات الاستخدام:</h4>
+                        <ul class="list-disc pr-5 space-y-1 text-gray-700">
+                            <li>يرجى تقديم استفساراتكم بشكل واضح ومفصل</li>
+                            <li>سيتم الرد على استفساراتكم في أقرب وقت ممكن</li>
+                            <li>للمسائل العاجلة، يرجى الاتصال على الأرقام المخصصة للدعم</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 mb-2">نوع الطلب</label>
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:border-blue-500">
+                            <option value="">اختر نوع الطلب</option>
+                            <option value="inquiry">استفسار</option>
+                            <option value="complaint">شكوى</option>
+                            <option value="suggestion">مقترح</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">الموضوع</label>
+                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">الرسالة</label>
+                        <textarea rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:border-blue-500" required></textarea>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="agree-terms2" class="ml-2" required>
+                        <label for="agree-terms2" class="text-gray-700">أقر بأن المعلومات المقدمة صحيحة</label>
+                    </div>
+                    
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors w-full">
+                        <i class="fas fa-paper-plane mr-2"></i>إرسال الطلب
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Map Section -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">عناوين وأرقام الهاتف</h2>
+            
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="lg:w-1/2">
+                    <div class="bg-blue-50 rounded-xl p-6 shadow-lg mb-6">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-700">معلومات الاتصال</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-map-marker-alt text-blue-600 mt-1 ml-3"></i>
+                                <div>
+                                    <h4 class="font-semibold">العنوان</h4>
+                                    <p class="text-gray-600">ولاية الجزائر، الجزائر</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-phone text-blue-600 mt-1 ml-3"></i>
+                                <div>
+                                    <h4 class="font-semibold">رقم الهاتف</h4>
+                                    <p class="text-gray-600">+213 XX XX XX XX XX</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-envelope text-blue-600 mt-1 ml-3"></i>
+                                <div>
+                                    <h4 class="font-semibold">البريد الإلكتروني</h4>
+                                    <p class="text-gray-600">info@alphabetisation-dz.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-clock text-blue-600 mt-1 ml-3"></i>
+                                <div>
+                                    <h4 class="font-semibold">ساعات العمل</h4>
+                                    <p class="text-gray-600">الأحد - الخميس: 8:00 - 16:00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-green-50 rounded-xl p-6 shadow-lg">
+                        <h3 class="text-2xl font-bold mb-4 text-green-700">فصول محو الأمية</h3>
+                        <p class="text-gray-700 mb-4">
+                            يمكن للدارسين الالتحاق بفصول محو الأمية في المراكز التابعة للملحقة في مختلف بلديات ولاية الجزائر.
+                        </p>
+                        <button class="bg-green-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-700 transition-colors w-full">
+                            <i class="fas fa-search-location mr-2"></i>البحث عن أقرب فصل
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2">
+                    <div class="map-container h-96 bg-gray-200 rounded-xl flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fas fa-map-marked-alt text-6xl text-blue-600 mb-4"></i>
+                            <p class="text-gray-700">خريطة تفاعلية توضح مواقع فصول محو الأمية</p>
+                            <button class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors mt-4">
+                                <i class="fas fa-map mr-2"></i>فتح الخريطة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">ملحقة الديوان الوطني لمحو الأمية</h3>
+                    <p class="text-gray-400">نسعى لنشر العلم والمعرفة بين جميع فئات المجتمع في ولاية الجزائر</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">روابط سريعة</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#history" class="text-gray-400 hover:text-white transition-colors">نبذة تاريخية</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors">المصالح</a></li>
+                        <li><a href="#registration" class="text-gray-400 hover:text-white transition-colors">التسجيلات</a></li>
+                        <li><a href="#resources" class="text-gray-400 hover:text-white transition-colors">الموارد</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">الخدمات</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">تسجيلات الأعوان</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">مناهج التعليم</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">أقسام الدعم</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">الرؤية المستقبلية</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">تابعنا</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2023 ملحقة الديوان الوطني لمحو الأمية وتعليم الكبار - ولاية الجزائر. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">تسجيل الدخول</h2>
+                <button id="close-login-modal" class="text-gray-500 hover:text-gray-700 text-xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2">اسم المستخدم</label>
+                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2">كلمة المرور</label>
+                    <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember" class="ml-2">
+                        <label for="remember" class="text-gray-700">تذكرني</label>
+                    </div>
+                    <a href="#" class="text-blue-600 hover:text-blue-800">نسيت كلمة المرور؟</a>
+                </div>
+                <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors w-full">
+                    تسجيل الدخول
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p class="text-gray-600">ليس لديك حساب؟ <a href="#" class="text-blue-600 font-semibold">انشاء حساب جديد</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Login Modal
+        const loginBtn = document.getElementById('login-btn');
+        const mobileLoginBtn = document.getElementById('mobile-login-btn');
+        const loginModal = document.getElementById('login-modal');
+        const closeLoginModal = document.getElementById('close-login-modal');
+
+        function openLoginModal() {
+            loginModal.classList.add('active');
+            loginModal.style.display = 'flex';
+        }
+
+        function closeLoginModalFunc() {
+            loginModal.classList.remove('active');
+            setTimeout(() => {
+                loginModal.style.display = 'none';
+            }, 300);
+        }
+
+        loginBtn.addEventListener('click', openLoginModal);
+        mobileLoginBtn.addEventListener('click', openLoginModal);
+        closeLoginModal.addEventListener('click', closeLoginModalFunc);
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === loginModal) {
+                closeLoginModalFunc();
+            }
+        });
+
+        // Form submission for registration
+        document.getElementById('registration-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Here you would typically send the form data to your server
+            // For this example, we'll just show an alert
+            alert('تم تقديم طلب التسجيل بنجاح! سيتم مراجعة البيانات والاتصال بك قريباً.');
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('section-visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('section-hidden');
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
